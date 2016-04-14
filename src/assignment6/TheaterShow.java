@@ -7,12 +7,12 @@ public class TheaterShow {
 	 * Queue of seats at the theater
 	 */
 	
-	protected Queue<Seat> availableSeats;
+	protected Queue<Seat> theatreSeats;
 	
 	
 	private void init(){
 		
-		
+		theatreSeats = new LinkedList<Seat>();
 	}
 
 }

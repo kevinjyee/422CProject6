@@ -10,26 +10,29 @@ public class Seat {
 	protected Section section;
 	
 	/*Designates the row that this seat is in*/
-	protected int row;
+	protected String row;
 	
 	/*Designates the row number*/
 	protected int number;
 	
 	
 	
-	public Seat(Section section, int row, int number){
+	public Seat(Section section, String row, int number){
 		this.section = section;
 		this.row = row;
 		this.number = number;
 	}
 
 	
+	
+	
+	
 	public int getNumber(){
 		return number;
 	}
 	
 
-	public int getRow(){
+	public String getRow(){
 		return row;
 	}
 
