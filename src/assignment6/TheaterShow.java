@@ -66,9 +66,9 @@ public class TheaterShow {
 
 	/*For Debugging Purposes* 
 	 * Uncomment to test initSeats
-	 */
-	public static void main(String args[]){
-		
-		initSeats();
-	}
+//	 */
+//	public static void main(String args[]){
+//		
+//		initSeats();
+//	}
 }
