@@ -13,18 +13,18 @@ public class Seat {
 	protected String row;
 	
 	/*Designates the row number*/
-	protected int number;
+	protected int seatNumber;
 	
 	
 	public Seat(Section section, String row, int number){
 		this.section = section;
 		this.row = row;
-		this.number = number;
+		this.seatNumber = number;
 	}
 
 	
 	public int getNumber(){
-		return number;
+		return seatNumber;
 	}
 	
 

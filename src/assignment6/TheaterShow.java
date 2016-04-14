@@ -5,29 +5,29 @@ import java.util.*;
 import assignment6.Seat.Section;
 public class TheaterShow {
 	
-	protected Queue<Seat> theatreSeats;
+	public static Queue<Seat> theatreSeats;
 	
-	protected int seatsPerSection = 729; // 27 rows * 27 seats per row
-	protected int numberSections = 6; // 6 total sections (front middle, front left, front right, back middle, back left, back right)
+	protected static int seatsPerSection = 676; // 27 rows * 27 seats per row
+	protected static int numberSections = 6; // 6 total sections (front middle, front left, front right, back middle, back left, back right)
 	
-	protected int maxRows = 27; //total Rows
-	protected int maxSeatsperRow = 27; //total Seats per Row
+	protected static int maxRows = 26; //total Rows
+	protected static int maxSeatsperRow = 26; //total Seats per Row
 	
-	public int theatreCapacity = 0; //total theatreCapacity
+	public static int theatreCapacity = 0; //total theatreCapacity
 	
-	public final ArrayList<String> rowArray = new ArrayList<String>();
+	public static final ArrayList<String> rowArray = new ArrayList<String>();
 	
 	
-	private void initRows()
+	public static void initRows()
 	{
-		for(int i =0; i<27; i++){
+		for(int i =0; i<26; i++){
 			char character = 'A';
 			rowArray.add(character++ + "");
 		}
 		
 	}
 	
-	private void initSeats(){
+	public static void initSeats(){
 		
 		initRows();
 		
@@ -42,17 +42,18 @@ public class TheaterShow {
 		ArrayList<Seat> backRight = new ArrayList<Seat>();
 		
 		
-		for(int i =0; i < seatsPerSection; i++)
+		for(int j=0; j < 26; j++){
+		for(int i =0; i < 26; i++)
 		{
-			frontMiddle.add(new Seat(Section.FrontMiddle, rowArray.get(i%maxRows), i%27));
-			frontLeft.add(new Seat(Section.FrontLeft,rowArray.get(i%maxRows),i%27));
-			frontRight.add(new Seat(Section.FrontRight,rowArray.get(i%maxRows),i%27));	
-			backMiddle.add(new Seat(Section.BackMiddle,rowArray.get(i%maxRows),i%27));	
-			backLeft.add(new Seat(Section.BackLeft,rowArray.get(i%maxRows),i%27));
-			backRight.add(new Seat(Section.BackRight,rowArray.get(i%maxRows),i%27));	
+			frontMiddle.add(new Seat(Section.FrontMiddle, rowArray.get(j), i));
+			frontLeft.add(new Seat(Section.FrontLeft,rowArray.get(j),i));
+			frontRight.add(new Seat(Section.FrontRight,rowArray.get(j),i));	
+			backMiddle.add(new Seat(Section.BackMiddle,rowArray.get(j),i));	
+			backLeft.add(new Seat(Section.BackLeft,rowArray.get(j),i));
+			backRight.add(new Seat(Section.BackRight,rowArray.get(j),i));	
 		}
 		
-		
+		}
 			theatreSeats.addAll(frontMiddle);
 			theatreSeats.addAll(frontLeft);
 			theatreSeats.addAll(frontRight);
@@ -63,4 +64,11 @@ public class TheaterShow {
 			theatreCapacity = theatreSeats.size();
 	}
 
+	/*For Debugging Purposes* 
+	 * Uncomment to test initSeats
+	 */
+	public static void main(String args[]){
+		
+		initSeats();
+	}
 }
