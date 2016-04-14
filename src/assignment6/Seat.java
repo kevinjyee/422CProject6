@@ -1,3 +1,10 @@
+/*
+ Seat.java
+ Solves EE422C programming assignment #6
+ @author Stefan Bordovsky (sb39782) Kevin Yee (kjy252)
+ @version 1.01 2016-04-013
+ */
+
 package assignment6;
 
 public class Seat {
