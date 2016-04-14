@@ -2,10 +2,10 @@ package assignment6;
 
 public class Seat {
 
-	public enum Section { HouseLeft, HouseMiddle, HouseRight }
+	public enum Section { FrontMiddle, FrontLeft, FrontRight, BackMiddle, BackLeft, BackRight }
 	
-	protected String validSection = "AA[A-Z]";
-	/*Designates the section*/
+	protected String validSection = "[A-Z]";
+
 	
 	protected Section section;
 	
@@ -16,16 +16,12 @@ public class Seat {
 	protected int number;
 	
 	
-	
 	public Seat(Section section, String row, int number){
 		this.section = section;
 		this.row = row;
 		this.number = number;
 	}
 
-	
-	
-	
 	
 	public int getNumber(){
 		return number;
