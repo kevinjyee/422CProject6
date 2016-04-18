@@ -11,6 +11,14 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.LinkedList;
+import java.util.Queue;
+
+import assignment6.Seat;
+import assignment6.SoldOutException;
+import assignment6.TheaterShow;
+import assignment6.ThreadedTicketClient;
+import assignment6.TicketServer;
 
 class ThreadedTicketClient implements Runnable {
 	String hostname = "127.0.0.1";
@@ -28,15 +36,33 @@ class ThreadedTicketClient implements Runnable {
 		try {
 			Socket echoSocket = new Socket(hostname, TicketServer.PORT);
 			// PrintWriter out =
-			new PrintWriter(echoSocket.getOutputStream(), true);
+			PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-			String seat = in.readLine();
-			sc.result = seat;
 			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+			
+			while(!sc.customers.isEmpty()){
+				try{
+					String cust = sc.customers.poll(); // Find next customer
+					Seat nextSeat = sc.venue.bestAvailableSeat(); // Reserve a seat for the next customer.
+					if(nextSeat != null){
+						printTicketSeat(nextSeat, cust);
+					}
+				} catch(SoldOutException e){
+					echoSocket.close();
+					throw new SoldOutException();
+				}
+			}
 			echoSocket.close();
+		} catch(SoldOutException e){
+			throw new SoldOutException();
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
+	}
+	
+	public void printTicketSeat(Seat nextSeat, String cust){
+		System.out.println(cust + " reserved seat " + nextSeat.getRow() + nextSeat.getNumber() + " in " + nextSeat.getSection() +
+				" section from ticket office " + threadname);
 	}
 }
 
@@ -45,25 +71,40 @@ public class TicketClient {
 	String result = "dummy";
 	String hostName = "";
 	String threadName = "";
+	Queue<String> customers;
+	TheaterShow venue;
 
-	TicketClient(String hostname, String threadname) {
+	TicketClient(String hostname, String threadname, int numCustomers, TheaterShow theatre) {
 		tc = new ThreadedTicketClient(this, hostname, threadname);
 		hostName = hostname;
 		threadName = threadname;
+		customers = new LinkedList<String>();
+		for(int i = 0; i < numCustomers; i++){ // Create a queue of customers.
+			String cust = "customer" + Integer.toString(i);
+			customers.add(cust);
+		}
+		venue = theatre;
+		
 	}
 
 	TicketClient(String name) {
-		this("localhost", name);
+		this("localhost", name, 0, null);
 	}
 
 	TicketClient() {
-		this("localhost", "unnamed client");
+		this("localhost", "unnamed client", 0, null);
 	}
 
 	void requestTicket() {
 		// TODO thread.run()
-		tc.run();
-		System.out.println(hostName + "," + threadName + " got one ticket");
+		try{
+			tc.run();
+		} catch (SoldOutException e){
+			System.out.println("The Bates Recital Hall has sold out of tickets. Ticket office " + threadName + " now closing.");
+			return;
+		} catch(Exception e){
+			System.out.println("Something went wrong...");
+		}
 	}
 
 	void sleep() {

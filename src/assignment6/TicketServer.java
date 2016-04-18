@@ -15,11 +15,22 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import assignment6.TheaterShow;
+
 public class TicketServer {
 	static int PORT = 2222;
 	// EE422C: no matter how many concurrent requests you get,
 	// do not have more than three servers running concurrently
 	final static int MAXPARALLELTHREADS = 3;
+	
+	public TheaterShow theatre = null;
+	
+	public TicketServer(){
+		if(theatre == null){
+			theatre = new TheaterShow();
+		}
+	}
+	
 	//Out put Booth 1 sold A17
 	public static void start(int portNumber) throws IOException {
 		PORT = portNumber;

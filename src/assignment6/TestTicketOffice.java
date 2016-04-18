@@ -9,7 +9,12 @@ package assignment6;
 
 import static org.junit.Assert.fail;
 
+import java.util.Random;
+
 import org.junit.Test;
+
+import assignment6.TheaterShow;
+import assignment6.TicketClient;
 
 public class TestTicketOffice {
 
@@ -22,7 +27,10 @@ public class TestTicketOffice {
 		} catch (Exception e) {
 			fail();
 		}
-		TicketClient client = new TicketClient();
+		TheaterShow batesRecitalHall = new TheaterShow();
+		Random rand = new Random();
+		int numCustomers = rand.nextInt(901) + 100; // Generates random int between 100 and 1000.
+		TicketClient client = new TicketClient("localhost", "c_test", numCustomers, batesRecitalHall);
 		client.requestTicket();
 	}
 
@@ -33,8 +41,12 @@ public class TestTicketOffice {
 		} catch (Exception e) {
 			fail();
 		}
-		TicketClient client1 = new TicketClient("localhost", "c1");
-		TicketClient client2 = new TicketClient("localhost", "c2");
+		TheaterShow batesRecitalHall = new TheaterShow();
+		Random rand = new Random();
+		int numCustomers1 = rand.nextInt(451) + 50; // Generates random int between 50 and 500.
+		int numCustomers2 = rand.nextInt(451) + 50;
+		TicketClient client1 = new TicketClient("localhost", "c1", numCustomers1, batesRecitalHall);
+		TicketClient client2 = new TicketClient("localhost", "c2", numCustomers2, batesRecitalHall);
 		client1.requestTicket();
 		client2.requestTicket();
 		
@@ -62,9 +74,14 @@ public class TestTicketOffice {
 		} catch (Exception e) {
 			fail();
 		}
-		final TicketClient c1 = new TicketClient("conc1");
-		final TicketClient c2 = new TicketClient("conc2");
-		final TicketClient c3 = new TicketClient("conc3");
+		TheaterShow batesRecitalHall = new TheaterShow();
+		Random rand = new Random();
+		int numCustomers1 = rand.nextInt(4501) + 50; // Generates random int between 50 and 500.
+		int numCustomers2 = rand.nextInt(4501) + 50;
+		int numCustomers3 = rand.nextInt(4501) + 50;
+		TicketClient c1 = new TicketClient("localhost", "nonconc1", numCustomers1, batesRecitalHall);
+		TicketClient c2 = new TicketClient("localhost", "nonconc2", numCustomers2, batesRecitalHall);
+		TicketClient c3 = new TicketClient("localhost", "nonconc3", numCustomers3, batesRecitalHall);
 		Thread t1 = new Thread() {
 			public void run() {
 				c1.requestTicket();

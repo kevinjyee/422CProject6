@@ -1,7 +1,11 @@
 package assignment6;
 
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
+import assignment6.Seat;
+import assignment6.SoldOutException;
 import assignment6.Seat.Section;
 public class TheaterShow {
 	
@@ -17,11 +21,12 @@ public class TheaterShow {
 	
 	public static final ArrayList<String> rowArray = new ArrayList<String>();
 	
+	private Lock changeLock = new ReentrantLock();
 	
 	public static void initRows()
 	{
+		char character = 'A';
 		for(int i =0; i<26; i++){
-			char character = 'A';
 			rowArray.add(character++ + "");
 		}
 		
@@ -43,25 +48,40 @@ public class TheaterShow {
 		
 		
 		for(int j=0; j < 26; j++){
-		for(int i =0; i < 26; i++)
-		{
-			frontMiddle.add(new Seat(Section.FrontMiddle, rowArray.get(j), i));
-			frontLeft.add(new Seat(Section.FrontLeft,rowArray.get(j),i));
-			frontRight.add(new Seat(Section.FrontRight,rowArray.get(j),i));	
-			backMiddle.add(new Seat(Section.BackMiddle,rowArray.get(j),i));	
-			backLeft.add(new Seat(Section.BackLeft,rowArray.get(j),i));
-			backRight.add(new Seat(Section.BackRight,rowArray.get(j),i));	
+			for(int i =0; i < 26; i++){
+				frontMiddle.add(new Seat(Section.FrontMiddle, rowArray.get(j), i));
+				frontLeft.add(new Seat(Section.FrontLeft,rowArray.get(j),i));
+				frontRight.add(new Seat(Section.FrontRight,rowArray.get(j),i));	
+				backMiddle.add(new Seat(Section.BackMiddle,rowArray.get(j),i));	
+				backLeft.add(new Seat(Section.BackLeft,rowArray.get(j),i));
+				backRight.add(new Seat(Section.BackRight,rowArray.get(j),i));	
+			}
 		}
-		
-		}
-			theatreSeats.addAll(frontMiddle);
-			theatreSeats.addAll(frontLeft);
-			theatreSeats.addAll(frontRight);
-			theatreSeats.addAll(backMiddle);
-			theatreSeats.addAll(backLeft);
-			theatreSeats.addAll(backRight);
+		theatreSeats.addAll(frontMiddle);
+		theatreSeats.addAll(frontLeft);
+		theatreSeats.addAll(frontRight);
+		theatreSeats.addAll(backMiddle);
+		theatreSeats.addAll(backLeft);
+		theatreSeats.addAll(backRight);
 			
-			theatreCapacity = theatreSeats.size();
+		theatreCapacity = theatreSeats.size();
+	}
+	
+	public Seat bestAvailableSeat(){
+		changeLock.lock(); // Lock this method so no two threads try to poll the same seat. 
+		Seat bestSeat = null;
+		try{
+			if(theatreSeats.isEmpty()){
+				throw new SoldOutException();
+			} else{
+				bestSeat = theatreSeats.poll();
+				//printTicket(bestSeat);
+			}
+		} finally{
+			changeLock.unlock();
+		}
+		return bestSeat;
+		
 	}
 
 	/*For Debugging Purposes* 
