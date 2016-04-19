@@ -14,12 +14,6 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import assignment6.Seat;
-import assignment6.SoldOutException;
-import assignment6.TheaterShow;
-import assignment6.ThreadedTicketClient;
-import assignment6.TicketServer;
-
 class ThreadedTicketClient implements Runnable {
 	String hostname = "127.0.0.1";
 	String threadname = "X";
@@ -64,6 +58,7 @@ class ThreadedTicketClient implements Runnable {
 		System.out.println(cust + " reserved seat " + nextSeat.getRow() + nextSeat.getNumber() + " in " + nextSeat.getSection() +
 				" section from ticket office " + threadname);
 	}
+	
 }
 
 public class TicketClient {

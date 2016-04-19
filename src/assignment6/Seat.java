@@ -9,7 +9,7 @@ package assignment6;
 
 public class Seat {
 
-	public enum Section { FrontMiddle, FrontLeft, FrontRight, BackMiddle, BackLeft, BackRight }
+	public enum Section {Middle_Section, Left_Wing, Right_Wing}
 	
 	protected String validSection = "[A-Z]";
 
@@ -29,6 +29,10 @@ public class Seat {
 		this.seatNumber = number;
 	}
 
+	public String toString(){
+		
+		return "" + section + "," + row + "," + seatNumber;
+	}
 	
 	public int getNumber(){
 		return seatNumber;

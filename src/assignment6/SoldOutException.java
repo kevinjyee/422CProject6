@@ -1,4 +1,4 @@
-
+package assignment6;
 
 public class SoldOutException extends RuntimeException {
 
