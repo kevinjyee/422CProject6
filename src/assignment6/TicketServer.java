@@ -30,9 +30,9 @@ public class TicketServer {
 	}
 	
 	//Out put Booth 1 sold A17
-	public static void start(int portNumber) throws IOException {
+	public static void start(int portNumber, TheaterShow venue) throws IOException {
 		PORT = portNumber;
-		Runnable serverThread = new ThreadedTicketServer(portNumber, theatre);
+		Runnable serverThread = new ThreadedTicketServer(portNumber, venue);
 		Thread t = new Thread(serverThread);
 		t.start();
 	}
@@ -50,10 +50,10 @@ class ThreadedTicketServer implements Runnable {
 	
 	
 	
-	public ThreadedTicketServer(int port, TheaterShow theatre){
+	public ThreadedTicketServer(int port, TheaterShow venue){
 	
 		this.port = port;
-		this.theatre = theatre;
+		this.theatre = venue;
 		
 	}
 	public void run() {

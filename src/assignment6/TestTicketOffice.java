@@ -91,9 +91,9 @@ public class TestTicketOffice {
 		Queue<String> lineTwo = new LinkedList<String>();
 		Queue<String> lineThree = new LinkedList<String>();
 		fillQueues(numCustomers, lineOne, lineTwo, lineThree);
-		TicketClient c1 = new TicketClient("localhost", "conc1", lineOne);
-		TicketClient c2 = new TicketClient("localhost", "conc2", lineTwo);
-		TicketClient c3 = new TicketClient("localhost", "conc3", lineThree);
+		final TicketClient c1 = new TicketClient("localhost", "conc1", lineOne);
+		final TicketClient c2 = new TicketClient("localhost", "conc2", lineTwo);
+		final TicketClient c3 = new TicketClient("localhost", "conc3", lineThree);
 		Thread t1 = new Thread() {
 			public void run() {
 				c1.requestTicket();
