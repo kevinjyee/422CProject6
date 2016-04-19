@@ -47,24 +47,18 @@ public class TheaterShow {
 		
 		for(int j=0; j < 26; j++){
 			
-			for(int i =0; i < 13; i++){
-			
-				if(j%3 == 0){
-					theatreSeats.add(new Seat(Section.Middle_Section, rowArray.get(j), i));
-				}
-				
-				else if(j%3 ==1){
-					theatreSeats.add(new Seat(Section.Left_Wing,rowArray.get(j),i));
-				}
-				else if(j%3 ==3){
-					theatreSeats.add(new Seat(Section.Right_Wing,rowArray.get(j),i));
-				}
+			for(int k = 108; k < 122; k++){
+				theatreSeats.add(new Seat(Section.Middle_Section, rowArray.get(j), k));
 			}
-				
-				
 			
+			for(int k = 122; k < 129; k++){
+				theatreSeats.add(new Seat(Section.Left_Wing,rowArray.get(j),k));
+			}
+			for(int k = 101; k < 108; k++){
+				theatreSeats.add(new Seat(Section.Right_Wing,rowArray.get(j),k));
 			}
 		}
+	}
 	
 			
 			
