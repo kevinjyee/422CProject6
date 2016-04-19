@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.*;
 
 public class TicketServer {
 	static int PORT = 2222;
@@ -22,7 +23,7 @@ public class TicketServer {
 	final static int MAXPARALLELTHREADS = 3;
 	
 	public static TheaterShow theatre = null;
-	
+	private static HashMap<Integer, Thread> threadMap = new HashMap<Integer, Thread>();
 	public TicketServer(){
 		if(theatre == null){
 			theatre = new TheaterShow();
@@ -30,12 +31,21 @@ public class TicketServer {
 	}
 	
 	//Out put Booth 1 sold A17
-	public static void start(int portNumber, TheaterShow venue) throws IOException {
+	public static void start(int portNumber,  TheaterShow venue) throws IOException {
 		PORT = portNumber;
 		Runnable serverThread = new ThreadedTicketServer(portNumber, venue);
 		Thread t = new Thread(serverThread);
+		threadMap.put(portNumber, t);
 		t.start();
 	}
+	
+public static void stop(int theaterNumber) {
+		
+		Thread thread = threadMap.get(theaterNumber);
+		if(thread == null){return;}
+			thread.interrupt();
+		}
+	
 }
 
 class ThreadedTicketServer implements Runnable {
@@ -63,10 +73,11 @@ class ThreadedTicketServer implements Runnable {
 		try {
 			serverSocket = new ServerSocket(TicketServer.PORT);
 			Socket clientSocket = serverSocket.accept();
-			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			
-			while ((inputLine = in.readLine()) != null) {
 			
+			while (true) {
+				BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+				inputLine = in.readLine();
 				PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 				String[] customerInfo = inputLine.split("\\s");
 				
@@ -76,13 +87,16 @@ class ThreadedTicketServer implements Runnable {
 					printTicket(customerInfo[0], customerInfo[1], outputLine);
 				}
 				catch (SoldOutException e) {
+					System.out.println("E1");
 					outputLine = null;
 				}
 				catch(NullPointerException e){
+					System.out.println("E2");
 					outputLine = null;
 				}
 				
 		        if (outputLine.equals(null)){
+		        	System.out.println("nll");
 		            break;
 		        }
 		        
@@ -97,6 +111,8 @@ class ThreadedTicketServer implements Runnable {
 
 
 	}
+	
+	
 	
 	
 	public void printTicket(String cust, String boxoffice, String seatInfo ){

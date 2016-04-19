@@ -30,31 +30,22 @@ class ThreadedTicketClient implements Runnable {
 	public void run() {
 		System.out.flush();
 		try {
-			Socket echoSocket = new Socket(hostname, TicketServer.PORT);
-			// PrintWriter out =
-			PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
-			BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-			BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 			
-			while(!sc.customers.isEmpty()){
-				try{
-					String cust = sc.customers.poll(); // Find next customer
-					String message = cust + " " + threadname;
-					out.println(message);
-					if(in.readLine() == null){
-						throw new SoldOutException();
-					}
-				} catch(SoldOutException e){
-					echoSocket.close();
-					throw new SoldOutException();
-				}
-			}
-			echoSocket.close();
-		} catch(SoldOutException e){
-			throw new SoldOutException();
-		} catch (Exception e) {
-			//e.printStackTrace();
+			Socket echoSocket = new Socket(hostname, TicketServer.PORT);
+			//BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
+			//BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+			PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
+			
+			
+			
+			String message = Line.custName + " " + threadname;
+			sc.result = message;
+			out.println(message);
+					
 		}
+	 catch (Exception e) {
+		e.printStackTrace();
+	}
 	}
 	
 	public void printTicketSeat(Seat nextSeat, String cust){
@@ -71,19 +62,19 @@ public class TicketClient {
 	String threadName = "";
 	Queue<String> customers;
 
-	TicketClient(String hostname, String threadname, Queue<String> line) {
+	TicketClient(String hostname, String threadname) {
 		tc = new ThreadedTicketClient(this, hostname, threadname);
 		hostName = hostname;
 		threadName = threadname;
-		customers = line;		
+		
 	}
 
 	TicketClient(String name) {
-		this("localhost", name, null);
+		this("localhost", name);
 	}
 
 	TicketClient() {
-		this("localhost", "unnamed client", null);
+		this("localhost", "unnamed client");
 	}
 
 

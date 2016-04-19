@@ -73,6 +73,7 @@ public class TheaterShow {
 		changeLock.lock(); // Lock this method so no two threads try to poll the same seat. 
 		Seat bestSeat = null;
 		try{
+		
 			if(theatreSeats.isEmpty()){
 				throw new SoldOutException();
 			} else{
