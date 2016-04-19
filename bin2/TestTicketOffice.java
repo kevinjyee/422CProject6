@@ -9,6 +9,9 @@ package assignment6;
 
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 import org.junit.Test;
@@ -26,8 +29,10 @@ public class TestTicketOffice {
 		}
 		TheaterShow batesRecitalHall = new TheaterShow();
 		Random rand = new Random();
-		int numCustomers = rand.nextInt(901) + 100; // Generates random int between 100 and 1000.
-		TicketClient client = new TicketClient("localhost", "c_test", numCustomers, batesRecitalHall);
+		int numCustomers = rand.nextInt(901) + 100;
+		Queue<String> lineOne = new LinkedList<String>();
+		fillQueues(numCustomers, lineOne);
+		TicketClient client = new TicketClient("localhost", "c_test", lineOne, batesRecitalHall);
 		client.requestTicket();
 	}
 
@@ -40,10 +45,12 @@ public class TestTicketOffice {
 		}
 		TheaterShow batesRecitalHall = new TheaterShow();
 		Random rand = new Random();
-		int numCustomers1 = rand.nextInt(451) + 50; // Generates random int between 50 and 500.
-		int numCustomers2 = rand.nextInt(451) + 50;
-		TicketClient client1 = new TicketClient("localhost", "c1", numCustomers1, batesRecitalHall);
-		TicketClient client2 = new TicketClient("localhost", "c2", numCustomers2, batesRecitalHall);
+		int numCustomers = rand.nextInt(901) + 100;
+		Queue<String> lineOne = new LinkedList<String>();
+		Queue<String> lineTwo = new LinkedList<String>();
+		fillQueues(numCustomers, lineOne, lineTwo);
+		TicketClient client1 = new TicketClient("localhost", "c1", lineOne, batesRecitalHall);
+		TicketClient client2 = new TicketClient("localhost", "c2", lineTwo, batesRecitalHall);
 		client1.requestTicket();
 		client2.requestTicket();
 		
@@ -58,12 +65,14 @@ public class TestTicketOffice {
 		}
 		TheaterShow batesRecitalHall = new TheaterShow();
 		Random rand = new Random();
-		int numCustomers1 = rand.nextInt(451) + 50; // Generates random int between 50 and 500.
-		int numCustomers2 = rand.nextInt(451) + 50;
-		int numCustomers3 = rand.nextInt(451) + 50;
-		TicketClient c1 = new TicketClient("localhost", "nonconc1", numCustomers1, batesRecitalHall);
-		TicketClient c2 = new TicketClient("localhost", "nonconc2", numCustomers2, batesRecitalHall);
-		TicketClient c3 = new TicketClient("localhost", "nonconc3", numCustomers3, batesRecitalHall);
+		int numCustomers = rand.nextInt(901) + 100;
+		Queue<String> lineOne = new LinkedList<String>();
+		Queue<String> lineTwo = new LinkedList<String>();
+		Queue<String> lineThree = new LinkedList<String>();
+		fillQueues(numCustomers, lineOne, lineTwo, lineThree);
+		TicketClient c1 = new TicketClient("localhost", "nonconc1", lineOne, batesRecitalHall);
+		TicketClient c2 = new TicketClient("localhost", "nonconc2", lineTwo, batesRecitalHall);
+		TicketClient c3 = new TicketClient("localhost", "nonconc3", lineThree, batesRecitalHall);
 		c1.requestTicket();
 		c2.requestTicket();
 		c3.requestTicket();
@@ -78,12 +87,14 @@ public class TestTicketOffice {
 		}
 		TheaterShow batesRecitalHall = new TheaterShow();
 		Random rand = new Random();
-		int numCustomers1 = rand.nextInt(4501) + 50; // Generates random int between 50 and 500.
-		int numCustomers2 = rand.nextInt(4501) + 50;
-		int numCustomers3 = rand.nextInt(4501) + 50;
-		TicketClient c1 = new TicketClient("localhost", "conc1", numCustomers1, batesRecitalHall);
-		TicketClient c2 = new TicketClient("localhost", "conc2", numCustomers2, batesRecitalHall);
-		TicketClient c3 = new TicketClient("localhost", "conc3", numCustomers3, batesRecitalHall);
+		int numCustomers = rand.nextInt(901) + 100;
+		Queue<String> lineOne = new LinkedList<String>();
+		Queue<String> lineTwo = new LinkedList<String>();
+		Queue<String> lineThree = new LinkedList<String>();
+		fillQueues(numCustomers, lineOne, lineTwo, lineThree);
+		TicketClient c1 = new TicketClient("localhost", "conc1", lineOne, batesRecitalHall);
+		TicketClient c2 = new TicketClient("localhost", "conc2", lineTwo, batesRecitalHall);
+		TicketClient c3 = new TicketClient("localhost", "conc3", lineThree, batesRecitalHall);
 		Thread t1 = new Thread() {
 			public void run() {
 				c1.requestTicket();
@@ -111,4 +122,36 @@ public class TestTicketOffice {
 		}
 
 	}
+	
+	public void fillQueues(int numCustomers, Queue<String> line1, Queue<String> line2, Queue<String> line3){
+		for(int i = 0; i < numCustomers; i++){
+			String customer = "customer" + Integer.toString(i);
+			if((i % 3) == 0){
+				line1.add(customer);
+			} else if((i % 3) == 1){
+				line2.add(customer);
+			} else if((i % 3) == 2){
+				line3.add(customer);
+			}
+		}
+	}
+	
+	public void fillQueues(int numCustomers, Queue<String> line1, Queue<String> line2){
+		for(int i = 0; i < numCustomers; i++){
+			String customer = "customer" + Integer.toString(i);
+			if((i % 2) == 0){
+				line1.add(customer);
+			} else if((i % 2) == 1){
+				line2.add(customer);
+			}
+		}
+	}
+	
+	public void fillQueues(int numCustomers, Queue<String> line1){
+		for(int i = 0; i < numCustomers; i++){
+			String customer = "customer" + Integer.toString(i);
+			line1.add(customer);
+		}
+	}
 }
+
