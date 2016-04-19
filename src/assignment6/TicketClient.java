@@ -39,9 +39,10 @@ class ThreadedTicketClient implements Runnable {
 			while(!sc.customers.isEmpty()){
 				try{
 					String cust = sc.customers.poll(); // Find next customer
-					Seat nextSeat = sc.venue.bestAvailableSeat(); // Reserve a seat for the next customer.
-					if(nextSeat != null){
-						printTicketSeat(nextSeat, cust);
+					String message = cust + " " + threadname;
+					out.println(message);
+					if(in.readLine() == null){
+						throw new SoldOutException();
 					}
 				} catch(SoldOutException e){
 					echoSocket.close();
