@@ -49,6 +49,7 @@ class ThreadedTicketServer implements Runnable {
 	TheaterShow theatre;
 	
 	
+	
 	public ThreadedTicketServer(int port, TheaterShow theatre){
 	
 		this.port = port;
@@ -67,18 +68,24 @@ class ThreadedTicketServer implements Runnable {
 			while ((inputLine = in.readLine()) != null) {
 			
 				PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-		      
+				String[] customerInfo = inputLine.split("\\s");
+				
 				
 				try {
 					outputLine = theatre.bestAvailableSeat().toString();
+					printTicket(customerInfo[0], customerInfo[1], outputLine);
 				}
 				catch (SoldOutException e) {
+					outputLine = null;
+				}
+				catch(NullPointerException e){
 					outputLine = null;
 				}
 				
 		        if (outputLine.equals(null)){
 		            break;
 		        }
+		        
 		    	out.println(outputLine);
 		    
 		    }
@@ -89,5 +96,11 @@ class ThreadedTicketServer implements Runnable {
 		}
 
 
+	}
+	
+	
+	public void printTicket(String cust, String boxoffice, String seatInfo ){
+		System.out.println(cust + " reserved seat " + seatInfo +
+				" section from ticket office " + boxoffice);
 	}
 }

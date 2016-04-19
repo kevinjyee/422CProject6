@@ -31,7 +31,7 @@ public class Seat {
 
 	public String toString(){
 		
-		return "" + section + "," + row + "," + seatNumber;
+		return "" + row + "," + seatNumber + "in " + section ;
 	}
 	
 	public int getNumber(){
