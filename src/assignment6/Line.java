@@ -1,25 +1,37 @@
 package assignment6;
 
+import java.util.*;
 public class Line implements Runnable {
 
 	
-	private int customersLeftInLine;
 	private TicketClient client;
 	public static String custName;
-	
-	public Line(String hostname, String threadname){
-		customersLeftInLine = ((int)(Math.random()*900) + 100);
+	String name;
+	private Queue<String> custLine;
+	public Line(String hostname, String threadname, Queue<String> Line){
+		
+		custLine = Line;
 		client = new TicketClient(hostname, threadname);
+		name = threadname;
 	}
 	
 	
 	public void run(){
 		
-		int custNo = 1;
-		while(customersLeftInLine > 0){
-			custName = "Customer" + custNo;
+		while(!custLine.isEmpty()){
+			custName = custLine.poll();
 			client.requestTicket();
-			customersLeftInLine--; //customer leaves b/c he is satisfied
+			try{
+			if(client.result.equals("null")){
+				System.out.println(custName + "  did not get a ticket from office " + name);
+			}
+			System.out.println(custName + " " + client.result + " from " + name);
+			}
+			catch(NullPointerException e){
+				System.out.println("E1");
+			}
+				
+			
 		}
 		
 		

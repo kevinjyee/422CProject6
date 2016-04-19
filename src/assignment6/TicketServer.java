@@ -44,6 +44,7 @@ public static void stop(int theaterNumber) {
 		Thread thread = threadMap.get(theaterNumber);
 		if(thread == null){return;}
 			thread.interrupt();
+			System.out.println("System gracefully stopped");
 		}
 	
 }
@@ -69,41 +70,37 @@ class ThreadedTicketServer implements Runnable {
 	public void run() {
 		// TODO 422C
 		ServerSocket serverSocket;
-		String inputLine, outputLine;
+		String inputLine, outputLine = "";
 		try {
 			serverSocket = new ServerSocket(TicketServer.PORT);
-			Socket clientSocket = serverSocket.accept();
+			
 			
 			
 			while (true) {
-				BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-				inputLine = in.readLine();
+				Socket clientSocket = serverSocket.accept();
 				PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-				String[] customerInfo = inputLine.split("\\s");
 				
 				
 				try {
 					outputLine = theatre.bestAvailableSeat().toString();
-					printTicket(customerInfo[0], customerInfo[1], outputLine);
+					
 				}
-				catch (SoldOutException e) {
-					System.out.println("E1");
-					outputLine = null;
+				catch(SoldOutException e){
+					System.out.println("The Bates Recital Hall has sold out of tickets. Ticket office now closing.");
+					
+					System.exit(0);
 				}
 				catch(NullPointerException e){
-					System.out.println("E2");
-					outputLine = null;
+					outputLine = "null";
 				}
 				
-		        if (outputLine.equals(null)){
-		        	System.out.println("nll");
-		            break;
-		        }
+		       
 		        
 		    	out.println(outputLine);
 		    
 		    }
-		    
+			
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -18,23 +18,30 @@ import org.junit.Test;
 public class TestTicketOffice {
 
 	public static int score = 0;
-/*
+
 	@Test
 	public void basicServerTest() {
-		try {
-			TheaterShow batesRecitalHall = new TheaterShow();
-			TicketServer.start(16791, batesRecitalHall);
-		} catch (Exception e) {
-			fail();
-		}
+	try{
+	   TheaterShow batesRecitalHall = new TheaterShow();
+	   TicketServer.start(16791, batesRecitalHall);
+	}
+	catch(Exception e){
+		fail();
+	}
 		Random rand = new Random();
 		int numCustomers = rand.nextInt(901) + 100;
 		Queue<String> lineOne = new LinkedList<String>();
 		fillQueues(numCustomers, lineOne);
-		Line line1 = new Line("localhost", "Single Office");
+		Line line1 = new Line("localhost", "SingleOffice",lineOne);
 		Thread thread = new Thread(line1);
 		thread.start();
-		System.out.println("Stop");
+		try{
+			thread.join();
+		}
+		catch(Exception e){
+			fail();
+		}
+		
 		TicketServer.stop(16791);
 	}
 
@@ -52,42 +59,19 @@ public class TestTicketOffice {
 		Queue<String> lineTwo = new LinkedList<String>();
 		fillQueues(numCustomers, lineOne, lineTwo);
 	
-		Thread line1 = new Thread(new Line("localhost", "c1"));
-		Thread line2 = new Thread(new Line("localhost", "c2"));
+		Thread line1 = new Thread(new Line("localhost", "c1",lineOne));
+		Thread line2 = new Thread(new Line("localhost", "c2",lineTwo));
 		
 		line1.start();
 		line2.start();
 	}
 
-
-
-	@Test
-	public void twoNonConcurrentServerTest() {
-		try {
-			TheaterShow batesRecitalHall = new TheaterShow();
-			TicketServer.start(16791, batesRecitalHall);
-		} catch (Exception e) {
-			fail();
-		}
-		Random rand = new Random();
-		int numCustomers = rand.nextInt(901) + 100;
-		Queue<String> lineOne = new LinkedList<String>();
-		Queue<String> lineTwo = new LinkedList<String>();
-		Queue<String> lineThree = new LinkedList<String>();
-		fillQueues(numCustomers, lineOne, lineTwo, lineThree);
-//		TicketClient c1 = new TicketClient("localhost", "nonconc1", lineOne);
-//		TicketClient c2 = new TicketClient("localhost", "nonconc2", lineTwo);
-//		TicketClient c3 = new TicketClient("localhost", "nonconc3", lineThree);
-//		c1.requestTicket();
-//		c2.requestTicket();
-//		c3.requestTicket();
-	}
-	*/
+	
 	@Test
 	public void twoConcurrentServerTest() {
 		try {
 			TheaterShow batesRecitalHall = new TheaterShow();
-			TicketServer.start(16792, batesRecitalHall);
+			TicketServer.start(16782, batesRecitalHall);
 		} catch (Exception e) {
 			fail();
 		}
@@ -97,9 +81,9 @@ public class TestTicketOffice {
 		Queue<String> lineTwo = new LinkedList<String>();
 		Queue<String> lineThree = new LinkedList<String>();
 		fillQueues(numCustomers, lineOne, lineTwo, lineThree);
-		Thread t1 = new Thread(new Line("localhost", "c1"));
-		Thread t2 = new Thread(new Line("localhost", "c2"));
-		Thread t3 = new Thread(new Line("localhost", "c3"));
+		Thread t1 = new Thread(new Line("localhost", "c1",lineOne));
+		Thread t2 = new Thread(new Line("localhost", "c2",lineTwo));
+		Thread t3 = new Thread(new Line("localhost", "c3",lineThree));
 		
 		
 		t1.start();
@@ -112,6 +96,7 @@ public class TestTicketOffice {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		TicketServer.stop(16782);
 
 	}
 	
