@@ -14,6 +14,8 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import assignment6.ThreadedTicketClient;
+
 class ThreadedTicketClient implements Runnable {
 	String hostname = "127.0.0.1";
 	String threadname = "X";
@@ -67,28 +69,22 @@ public class TicketClient {
 	String hostName = "";
 	String threadName = "";
 	Queue<String> customers;
-	TheaterShow venue;
 
-	TicketClient(String hostname, String threadname, int numCustomers, TheaterShow theatre) {
+	TicketClient(String hostname, String threadname, Queue<String> line) {
 		tc = new ThreadedTicketClient(this, hostname, threadname);
 		hostName = hostname;
 		threadName = threadname;
-		customers = new LinkedList<String>();
-		for(int i = 0; i < numCustomers; i++){ // Create a queue of customers.
-			String cust = "customer" + Integer.toString(i);
-			customers.add(cust);
-		}
-		venue = theatre;
-		
+		customers = line;		
 	}
 
 	TicketClient(String name) {
-		this("localhost", name, 0, null);
+		this("localhost", name, null);
 	}
 
 	TicketClient() {
-		this("localhost", "unnamed client", 0, null);
+		this("localhost", "unnamed client", null);
 	}
+
 
 	void requestTicket() {
 		// TODO thread.run()
