@@ -9,7 +9,6 @@ package assignment6;
 
 import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
@@ -23,34 +22,34 @@ public class TestTicketOffice {
 	@Test
 	public void basicServerTest() {
 		try {
-			TicketServer.start(16789);
+			TheaterShow batesRecitalHall = new TheaterShow();
+			TicketServer.start(16789, batesRecitalHall);
 		} catch (Exception e) {
 			fail();
 		}
-		TheaterShow batesRecitalHall = new TheaterShow();
 		Random rand = new Random();
 		int numCustomers = rand.nextInt(901) + 100;
 		Queue<String> lineOne = new LinkedList<String>();
 		fillQueues(numCustomers, lineOne);
-		TicketClient client = new TicketClient("localhost", "c_test", lineOne, batesRecitalHall);
+		TicketClient client = new TicketClient("localhost", "c_test", lineOne);
 		client.requestTicket();
 	}
 
 	@Test
 	public void testServerCachedHardInstance() {
 		try {
-			TicketServer.start(16790);
+			TheaterShow batesRecitalHall = new TheaterShow();
+			TicketServer.start(16790, batesRecitalHall);
 		} catch (Exception e) {
 			fail();
 		}
-		TheaterShow batesRecitalHall = new TheaterShow();
 		Random rand = new Random();
 		int numCustomers = rand.nextInt(901) + 100;
 		Queue<String> lineOne = new LinkedList<String>();
 		Queue<String> lineTwo = new LinkedList<String>();
 		fillQueues(numCustomers, lineOne, lineTwo);
-		TicketClient client1 = new TicketClient("localhost", "c1", lineOne, batesRecitalHall);
-		TicketClient client2 = new TicketClient("localhost", "c2", lineTwo, batesRecitalHall);
+		TicketClient client1 = new TicketClient("localhost", "c1", lineOne);
+		TicketClient client2 = new TicketClient("localhost", "c2", lineTwo);
 		client1.requestTicket();
 		client2.requestTicket();
 		
@@ -59,20 +58,20 @@ public class TestTicketOffice {
 	@Test
 	public void twoNonConcurrentServerTest() {
 		try {
-			TicketServer.start(16791);
+			TheaterShow batesRecitalHall = new TheaterShow();
+			TicketServer.start(16791, batesRecitalHall);
 		} catch (Exception e) {
 			fail();
 		}
-		TheaterShow batesRecitalHall = new TheaterShow();
 		Random rand = new Random();
 		int numCustomers = rand.nextInt(901) + 100;
 		Queue<String> lineOne = new LinkedList<String>();
 		Queue<String> lineTwo = new LinkedList<String>();
 		Queue<String> lineThree = new LinkedList<String>();
 		fillQueues(numCustomers, lineOne, lineTwo, lineThree);
-		TicketClient c1 = new TicketClient("localhost", "nonconc1", lineOne, batesRecitalHall);
-		TicketClient c2 = new TicketClient("localhost", "nonconc2", lineTwo, batesRecitalHall);
-		TicketClient c3 = new TicketClient("localhost", "nonconc3", lineThree, batesRecitalHall);
+		TicketClient c1 = new TicketClient("localhost", "nonconc1", lineOne);
+		TicketClient c2 = new TicketClient("localhost", "nonconc2", lineTwo);
+		TicketClient c3 = new TicketClient("localhost", "nonconc3", lineThree);
 		c1.requestTicket();
 		c2.requestTicket();
 		c3.requestTicket();
@@ -81,20 +80,20 @@ public class TestTicketOffice {
 	@Test
 	public void twoConcurrentServerTest() {
 		try {
-			TicketServer.start(16792);
+			TheaterShow batesRecitalHall = new TheaterShow();
+			TicketServer.start(16792, batesRecitalHall);
 		} catch (Exception e) {
 			fail();
 		}
-		TheaterShow batesRecitalHall = new TheaterShow();
 		Random rand = new Random();
 		int numCustomers = rand.nextInt(901) + 100;
 		Queue<String> lineOne = new LinkedList<String>();
 		Queue<String> lineTwo = new LinkedList<String>();
 		Queue<String> lineThree = new LinkedList<String>();
 		fillQueues(numCustomers, lineOne, lineTwo, lineThree);
-		TicketClient c1 = new TicketClient("localhost", "conc1", lineOne, batesRecitalHall);
-		TicketClient c2 = new TicketClient("localhost", "conc2", lineTwo, batesRecitalHall);
-		TicketClient c3 = new TicketClient("localhost", "conc3", lineThree, batesRecitalHall);
+		TicketClient c1 = new TicketClient("localhost", "conc1", lineOne);
+		TicketClient c2 = new TicketClient("localhost", "conc2", lineTwo);
+		TicketClient c3 = new TicketClient("localhost", "conc3", lineThree);
 		Thread t1 = new Thread() {
 			public void run() {
 				c1.requestTicket();
