@@ -63,9 +63,64 @@ public class TestTicketOffice {
 		Thread line2 = new Thread(new Line("localhost", "c2",lineTwo));
 		
 		line1.start();
+		
+		try{
+			line1.join();
+		}
+		catch(Exception e){
+			fail();
+		}
 		line2.start();
+		try{
+			line2.join();
+		}
+		catch(Exception e){
+			fail();
+		}
+		TicketServer.stop(16790);
 	}
 
+	@Test
+	public void twoNonConcurrentServerTest() {
+		try {
+			TheaterShow batesRecitalHall = new TheaterShow();
+			TicketServer.start(16791, batesRecitalHall);
+		} catch (Exception e) {
+			fail();
+		}
+		Random rand = new Random();
+		int numCustomers = rand.nextInt(901) + 100;
+		Queue<String> lineOne = new LinkedList<String>();
+		Queue<String> lineTwo = new LinkedList<String>();
+		Queue<String> lineThree = new LinkedList<String>();
+		fillQueues(numCustomers, lineOne, lineTwo, lineThree);
+		Thread line1 = new Thread(new Line("localhost", "nonconc1",lineOne));
+		Thread line2 = new Thread(new Line("localhost", "nonconc2",lineTwo));
+		Thread line3 = new Thread(new Line("localhost","nonconc3",lineThree));
+line1.start();
+		
+		try{
+			line1.join();
+		}
+		catch(Exception e){
+			fail();
+		}
+		line2.start();
+		try{
+			line2.join();
+		}
+		catch(Exception e){
+			fail();
+		}
+		line3.start();
+		try{
+			line3.join();
+		}
+		catch(Exception e){
+			fail();
+		}
+		TicketServer.stop(16791);
+	}
 	
 	@Test
 	public void twoConcurrentServerTest() {
