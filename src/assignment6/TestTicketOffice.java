@@ -192,7 +192,7 @@ line1.start();
 			fail();
 		}
 		Random rand = new Random();
-		int numCustomers = rand.nextInt(901) + 500;
+		int numCustomers = rand.nextInt(901) + 1000;
 		Queue<String> lineOne = new LinkedList<String>();
 		Queue<String> lineTwo = new LinkedList<String>();
 		Queue<String> lineThree = new LinkedList<String>();

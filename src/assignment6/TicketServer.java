@@ -87,7 +87,7 @@ class ThreadedTicketServer implements Runnable {
 				}
 				catch(SoldOutException e){
 					System.out.println("The Bates Recital Hall has sold out of tickets. Ticket office now closing.");
-					
+					TicketServer.stop(this.port);
 					System.exit(0);
 				}
 				catch(NullPointerException e){
