@@ -25,28 +25,29 @@ public class TestTicketOffice {
  */
 	@Test
 	public void basicServerTest() {
-	try{
-	   TheaterShow batesRecitalHall = new TheaterShow();
-	   TicketServer.start(16791, batesRecitalHall);
-	}
-	catch(Exception e){
-		fail();
-	}
-		Random rand = new Random();
-		int numCustomers = rand.nextInt(901) + 100;
-		Queue<String> lineOne = new LinkedList<String>();
-		fillQueues(numCustomers, lineOne);
-		Line line1 = new Line("localhost", "SingleOffice",lineOne);
-		Thread thread = new Thread(line1);
-		thread.start();
 		try{
-			thread.join();
+			TheaterShow batesRecitalHall = new TheaterShow(); // Create theatre configuration.
+			TicketServer.start(16791, batesRecitalHall); // Start TicketServer.
+		}
+		catch(Exception e){
+			fail();
+		}
+		Random rand = new Random(); // Create new random number generator.
+		int numCustomers = rand.nextInt(901) + 100; // Create random number of customers between 100 and 1000.
+		Queue<String> lineOne = new LinkedList<String>(); // Make queue to hold customer id's.
+		fillQueues(numCustomers, lineOne); // Fill queue with customer id's (0 -> numCustomers - 1)
+		Line line1 = new Line("localhost", "SingleOffice", lineOne); // Create thread which finds a seat for each customer.
+		
+		Thread thread = new Thread(line1);
+		thread.start(); // Start line1 thread.
+		try{
+			thread.join();  // Halt thread when finishes searching for seats for all customers or show sells out.
 		}
 		catch(Exception e){
 			fail();
 		}
 		
-		TicketServer.stop(16791);
+		TicketServer.stop(16791); // Shut down TicketServer.
 	}
 
 	/*
@@ -63,30 +64,34 @@ public class TestTicketOffice {
 			fail();
 		}
 		Random rand = new Random();
-		int numCustomers = rand.nextInt(901) + 100;
+		int numCustomers = rand.nextInt(901) + 100; // Generate random number of customers between 100 and 1000.
 		Queue<String> lineOne = new LinkedList<String>();
 		Queue<String> lineTwo = new LinkedList<String>();
+		// Create two customer queues, each with size (numCustomers / 2)
 		fillQueues(numCustomers, lineOne, lineTwo);
 	
+		// Create line thread for processing seat requests from first half of customers.
 		Thread line1 = new Thread(new Line("localhost", "c1",lineOne));
+		// Create line thread for processing seat requests from second half of customers.
 		Thread line2 = new Thread(new Line("localhost", "c2",lineTwo));
 		
-		line1.start();
+		line1.start(); // Begin line1 thread.
 		
 		try{
-			line1.join();
+			line1.join(); // Halt thread when finishes searching for seats for all customers or show sells out.
 		}
 		catch(Exception e){
 			fail();
 		}
-		line2.start();
+		
+		line2.start(); // Begin line 2 thread after line1 thread has ceased.
 		try{
-			line2.join();
+			line2.join();  // Halt thread when finishes searching for seats for all customers or show sells out.
 		}
 		catch(Exception e){
 			fail();
 		}
-		TicketServer.stop(16790);
+		TicketServer.stop(16790); // Shut down TicketServer.
 	}
 
 	
@@ -105,32 +110,38 @@ public class TestTicketOffice {
 			fail();
 		}
 		Random rand = new Random();
-		int numCustomers = rand.nextInt(901) + 100;
+		int numCustomers = rand.nextInt(901) + 100; // Generate random number of customers between 100 and 1000.
 		Queue<String> lineOne = new LinkedList<String>();
 		Queue<String> lineTwo = new LinkedList<String>();
 		Queue<String> lineThree = new LinkedList<String>();
+		// Create three customer queues, each with size (numCustomers / 3)
 		fillQueues(numCustomers, lineOne, lineTwo, lineThree);
+		
+		// Create line thread for processing seat requests from first third of customers.
 		Thread line1 = new Thread(new Line("localhost", "nonconc1",lineOne));
+		// Create line thread for processing seat requests from second third of customers.
 		Thread line2 = new Thread(new Line("localhost", "nonconc2",lineTwo));
+		// Create line thread for processing seat requests from last third of customers.
 		Thread line3 = new Thread(new Line("localhost","nonconc3",lineThree));
-		line1.start();
+		
+		line1.start(); // Begin line1 thread.
 		
 		try{
-			line1.join();
+			line1.join(); // Halt thread when finishes searching for seats for all customers or show sells out.
 		}
 		catch(Exception e){
 			fail();
 		}
-		line2.start();
+		line2.start(); // Begin line2 thread after line1 finishes processing.
 		try{
-			line2.join();
+			line2.join(); // Halt thread when finishes searching for seats for all customers or show sells out.
 		}
 		catch(Exception e){
 			fail();
 		}
-		line3.start();
+		line3.start(); // Begin line3 thread after line2 finishes processing.
 		try{
-			line3.join();
+			line3.join(); // Halt thread when finishes searching for seats for all customers or show sells out.
 		}
 		catch(Exception e){
 			fail();
@@ -154,20 +165,25 @@ public class TestTicketOffice {
 			fail();
 		}
 		Random rand = new Random();
-		int numCustomers = rand.nextInt(901) + 100;
+		int numCustomers = rand.nextInt(901) + 100;  // Generate random number of customers between 100 and 1000.
 		Queue<String> lineOne = new LinkedList<String>();
 		Queue<String> lineTwo = new LinkedList<String>();
 		Queue<String> lineThree = new LinkedList<String>();
+		// Create three customer queues, each with size (numCustomers / 3)
 		fillQueues(numCustomers, lineOne, lineTwo, lineThree);
+		// Create line thread for processing seat requests from first third of customers.
 		Thread t1 = new Thread(new Line("localhost", "c1", lineOne));
+		// Create line thread for processing seat requests from second third of customers.
 		Thread t2 = new Thread(new Line("localhost", "c2", lineTwo));
+		// Create line thread for processing seat requests from last third of customers.
 		Thread t3 = new Thread(new Line("localhost", "c3", lineThree));
 		
 		
-		t1.start();
-		t2.start();
-		t3.start();
+		t1.start(); // Begin line1 thread.
+		t2.start(); // Begin line2 thread.
+		t3.start(); // Begin line3 thread.
 		try {
+			 // Halt each thread when finishes searching for seats for all customers or show sells out.
 			t1.join();
 			t2.join();
 			t3.join();
@@ -181,7 +197,7 @@ public class TestTicketOffice {
 	/*
 	 * Function: threeConcurrentServersManyCustomers() {
 	 * ----------------------------------
-	 * Tests 3 concurrent Servers with sold out show
+	 * Tests 3 concurrent Servers with guaranteed sold out show
 	 */
 	@Test
 	public void threeConcurrentServersManyCustomers() {
@@ -192,20 +208,24 @@ public class TestTicketOffice {
 			fail();
 		}
 		Random rand = new Random();
-		int numCustomers = rand.nextInt(901) + 1000;
+		int numCustomers = rand.nextInt(901) + 1000; // Generate random number of customers between 1000 and 1900.
 		Queue<String> lineOne = new LinkedList<String>();
 		Queue<String> lineTwo = new LinkedList<String>();
 		Queue<String> lineThree = new LinkedList<String>();
+		// Create three customer queues, each with size (numCustomers / 3)
 		fillQueues(numCustomers, lineOne, lineTwo, lineThree);
+		// Create line thread for processing seat requests from first third of customers.
 		Thread t1 = new Thread(new Line("localhost", "c1", lineOne));
+		// Create line thread for processing seat requests from second third of customers.
 		Thread t2 = new Thread(new Line("localhost", "c2", lineTwo));
+		// Create line thread for processing seat requests from last third of customers.
 		Thread t3 = new Thread(new Line("localhost", "c3", lineThree));
 		
-		
-		t1.start();
-		t2.start();
-		t3.start();
+		t1.start(); // Begin line1 thread.
+		t2.start(); // Begin line2 thread.
+		t3.start(); // Begin line3 thread.
 		try {
+			 // Halt each thread when finishes searching for seats for all customers or show sells out.
 			t1.join();
 			t2.join();
 			t3.join();
@@ -213,14 +233,13 @@ public class TestTicketOffice {
 			e.printStackTrace();
 		}
 		TicketServer.stop(16782);
-
 	}
 	
 	
 	/*
 	 * Function: threeNonConcurrentServerTestManyCustomers()
 	 * ----------------------------------------
-	 * @ Tests the application of three Non Concurrent Servers
+	 * @ Tests the application of three Non Concurrent Servers with guaranteed sold-out show.
 	 */
 	@Test
 	public void threeNonConcurrentServerManyCustomers() {
@@ -231,32 +250,36 @@ public class TestTicketOffice {
 			fail();
 		}
 		Random rand = new Random();
-		int numCustomers = rand.nextInt(901) + 500;
+		int numCustomers = rand.nextInt(901) + 500; // Generate random number of customers between 500 and 1400.
 		Queue<String> lineOne = new LinkedList<String>();
 		Queue<String> lineTwo = new LinkedList<String>();
 		Queue<String> lineThree = new LinkedList<String>();
+		// Create three customer queues, each with size (numCustomers / 3)
 		fillQueues(numCustomers, lineOne, lineTwo, lineThree);
+		// Create line thread for processing seat requests from first third of customers.
 		Thread line1 = new Thread(new Line("localhost", "nonconc1",lineOne));
+		// Create line thread for processing seat requests from second third of customers.
 		Thread line2 = new Thread(new Line("localhost", "nonconc2",lineTwo));
+		// Create line thread for processing seat requests from last third of customers.
 		Thread line3 = new Thread(new Line("localhost","nonconc3",lineThree));
-		line1.start();
+		line1.start(); // Begin line1 thread.
 		
 		try{
-			line1.join();
+			line1.join(); // Halt thread when finishes searching for seats for all customers or show sells out.
 		}
 		catch(Exception e){
 			fail();
 		}
-		line2.start();
+		line2.start(); // Begin line2 thread once line1 finishes processing.
 		try{
-			line2.join();
+			line2.join(); // Halt thread when finishes searching for seats for all customers or show sells out.
 		}
 		catch(Exception e){
 			fail();
 		}
-		line3.start();
+		line3.start(); // Begin line3 thread once line2 finishes processing.
 		try{
-			line3.join();
+			line3.join(); // Halt thread when finishes searching for seats for all customers or show sells out.
 		}
 		catch(Exception e){
 			fail();
@@ -264,6 +287,7 @@ public class TestTicketOffice {
 		TicketServer.stop(16795);
 	}
 	
+	// Fill customer queues for three lines based on the given numCustomers.
 	public void fillQueues(int numCustomers, Queue<String> line1, Queue<String> line2, Queue<String> line3){
 		for(int i = 0; i < numCustomers; i++){
 			String customer = "customer" + Integer.toString(i);
@@ -277,19 +301,7 @@ public class TestTicketOffice {
 		}
 	}
 	
-	public void fillQueuesTest(int numCustomers, Queue<String> line1, Queue<String> line2, Queue<String> line3){
-		for(int i = 0; i < 12; i++){
-			String customer = "customer" + Integer.toString(i);
-			if((i % 3) == 0){
-				line1.add(customer);
-			} else if((i % 3) == 1){
-				line2.add(customer);
-			} else if((i % 3) == 2){
-				line3.add(customer);
-			}
-		}
-	}
-	
+	// Fill customer queues for two lines based on the given numCustomers.
 	public void fillQueues(int numCustomers, Queue<String> line1, Queue<String> line2){
 		for(int i = 0; i < numCustomers; i++){
 			String customer = "customer" + Integer.toString(i);
@@ -301,6 +313,7 @@ public class TestTicketOffice {
 		}
 	}
 	
+	// Fill customer queues for one line based on the given numCustomers.
 	public void fillQueues(int numCustomers, Queue<String> line1){
 		for(int i = 0; i < numCustomers; i++){
 			String customer = "customer" + Integer.toString(i);

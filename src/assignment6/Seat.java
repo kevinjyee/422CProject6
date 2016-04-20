@@ -8,18 +8,17 @@
 package assignment6;
 
 public class Seat {
-
-	public enum Section {Middle_Section, Left_Wing, Right_Wing}
 	
-	protected String validSection = "[A-Z]";
+	/* Seats can be either in left, middle, or right columns in front of the theatre stage. */
+	public enum Section {Middle_Section, House_Left, House_Right}
 
-	
+	/* Section (left, middle, right) that a seat is in. */
 	protected Section section;
 	
 	/*Designates the row that this seat is in*/
 	protected String row;
 	
-	/*Designates the row number*/
+	/*Designates an individual seat's numbering within a given row.*/
 	protected int seatNumber;
 	
 	
@@ -29,9 +28,17 @@ public class Seat {
 		this.seatNumber = number;
 	}
 
+	// Return string representation of a seat, including row, seat number, and section.
 	public String toString(){
-		
-		return "" + row  + seatNumber + " in " + section ;
+		String sec;
+		if(section == Section.House_Right){
+			sec = "House Right";
+		} else if(section == Section.Middle_Section){
+			sec = "Middle Section";
+		} else{
+			sec = "House Left";
+		}
+		return "" + row  + seatNumber + " in " + sec;
 	}
 	
 	public int getNumber(){

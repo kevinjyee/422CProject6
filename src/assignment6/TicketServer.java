@@ -24,29 +24,40 @@ public class TicketServer {
 	// do not have more than three servers running concurrently
 	final static int MAXPARALLELTHREADS = 3;
 	
+	public static TheaterShow theatre = null; 	// Will hold theater configuration and vacancy.
+	private static HashMap<Integer, Thread> threadMap = new HashMap<Integer, Thread>(); // Keeps track of open threads.
 	
-	public static TheaterShow theatre = null;
-	private static HashMap<Integer, Thread> threadMap = new HashMap<Integer, Thread>();
 	public TicketServer(){
 		if(theatre == null){
-			theatre = new TheaterShow();
+			theatre = new TheaterShow(); // Instantiate theatre configuration using Bates Recital Hall model.
 		}
 	}
 	
-	//Out put Booth 1 sold A17
+	// Start server thread given theater configuration and portnum.
 	public static void start(int portNumber,  TheaterShow venue) throws IOException {
-		PORT = portNumber;
-		Runnable serverThread = new ThreadedTicketServer(portNumber, venue);
-		Thread t = new Thread(serverThread);
-		threadMap.put(portNumber, t);
-		t.start();
+		PORT = portNumber; // Assign portnum to TicketServer.
+		Runnable serverThread = new ThreadedTicketServer(portNumber, venue); // Create ThreadedTicketServer to handle seat requests.
+		Thread t = new Thread(serverThread); // Create thread for ThreadedTicketServer.
+		threadMap.put(portNumber, t); // Add server thread to thread map, organizing by portnum.
+		
+		/*
+		Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
+		    public void uncaughtException(Thread th, Throwable ex) {
+		        t.interrupt();
+		        System.out.println("WE DID IT REDDIT");
+		    }
+		};
+		t.setUncaughtExceptionHandler(h);
+		t.setDaemon(true);
+		*/
+		t.start(); // Start TicketServer thread.
 	}
 	
-public static void stop(int theaterNumber) {
-		
-		Thread thread = threadMap.get(theaterNumber);
+public static void stop(int portNumber) {
+		// Halt a given server thread.
+		Thread thread = threadMap.get(portNumber); // Threads keyed on portnumber.
 		if(thread == null){return;}
-			thread.interrupt();
+			thread.interrupt(); // Interrupt selected thread, lest it run wild.
 			System.out.println("System gracefully stopped");
 		}
 	
@@ -54,51 +65,44 @@ public static void stop(int theaterNumber) {
 
 class ThreadedTicketServer implements Runnable {
 
-	String hostname = "127.0.0.1";
-	String threadname = "X";
-	String testcase;
-	TicketClient sc;
+	protected String hostname = "127.0.0.1"; // Holds hostname of ticket server.
+	protected String threadname = "X"; // Hold threadname of ticket server.
+	protected TicketClient sc; // Associated ticketclient for given server.
 	
-	int port;
-	TheaterShow theatre;
+	protected int port; // Port number for ticket server.
+	protected TheaterShow theatre; // Hold theatre configuration.
 	
 	
 	public ThreadedTicketServer(int port, TheaterShow venue){
 	
-		this.port = port;
-		this.theatre = venue;
+		this.port = port; // Assign port no.
+		this.theatre = venue; // Assign theatre configuration.
 		
 	}
+	
+	
 	public void run() {
 		// TODO 422C
 		ServerSocket serverSocket;
-		String inputLine, outputLine = "";
+		String outputLine = "";
 		try {
-			serverSocket = new ServerSocket(TicketServer.PORT);
-			
-			
-			
+			serverSocket = new ServerSocket(TicketServer.PORT); // Open up server socket to let ThreadedTicketClient connect.
 			while (true) {
-				Socket clientSocket = serverSocket.accept();
-				PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-				
-				
+				Socket clientSocket = serverSocket.accept(); // Accept client connection.
+				PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true); // Open up print output.
 				try {
-					outputLine = theatre.bestAvailableSeat().toString();
-					
+					outputLine = theatre.bestAvailableSeat().toString(); // Output seat information to requesting ThrTickClient.
 				}
-				catch(SoldOutException e){
-					System.out.println("The Bates Recital Hall has sold out of tickets. Ticket office now closing.");
+				catch(SoldOutException e){ // Shut down TicketServer when out of seats.
+					System.out.println("The Bates Recital Hall has sold out of tickets. Ticket offices now closing.");
 					TicketServer.stop(this.port);
+					//throw new SoldOutException();
 					System.exit(0);
 				}
 				catch(NullPointerException e){
 					outputLine = "null";
 				}
-				
-		       
-		        
-		    	out.println(outputLine);
+		    	out.println(outputLine); // Output result of seat request to requesting Threaded Ticket Client.
 		    
 		    }
 			
@@ -111,11 +115,4 @@ class ThreadedTicketServer implements Runnable {
 
 	}
 	
-	
-	
-	
-	public void printTicket(String cust, String boxoffice, String seatInfo ){
-		System.out.println(cust + " reserved seat " + seatInfo +
-				" section from ticket office " + boxoffice);
-	}
 }

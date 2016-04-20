@@ -22,10 +22,9 @@ class ThreadedTicketClient implements Runnable {
 	String hostname = "127.0.0.1";
 	String threadname = "X";
 	TicketClient sc;
-	private Lock changeLock = new ReentrantLock();
 
 	public ThreadedTicketClient(TicketClient sc, String hostname, String threadname) {
-		this.sc = sc;
+		this.sc = sc; // Each ThreadedTicketClient associated with a unique TicketClient.
 		this.hostname = hostname;
 		this.threadname = threadname;
 	}
@@ -33,36 +32,25 @@ class ThreadedTicketClient implements Runnable {
 	public void run() {
 		System.out.flush();
 		try {
-			Socket echoSocket = new Socket(hostname, TicketServer.PORT);
+			Socket echoSocket = new Socket(hostname, TicketServer.PORT); // Connect to TicketServer.
 			BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-			//BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-			sc.result = in.readLine();
-			echoSocket.close();
-			
-			
-			
-			
-			
-					
+			// Want to read seat assignment output from TicketServer.
+			sc.result = in.readLine(); // Save seat assignment in TicketClient's result variable.
+			echoSocket.close(); // Shut socket connection to TicketServer.			
 		}
-	 catch (Exception e) {
-		e.printStackTrace();
-	}
-	}
-	
-	public void printTicketSeat(Seat nextSeat, String cust){
-		System.out.println(cust + " reserved seat " + nextSeat.getRow() + nextSeat.getNumber() + " in " + nextSeat.getSection() +
-				" section from ticket office " + threadname);
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
 
 public class TicketClient {
-	ThreadedTicketClient tc;
-	String result = "dummy";
-	String hostName = "";
-	String threadName = "";
-	Queue<String> customers;
+	ThreadedTicketClient tc; // ThreadedTicketClient associated with the current TicketClient.
+	String result = "dummy"; // Will hold seat assignment information from TicketServer operations.
+	String hostName = ""; // TicketClient host name.
+	String threadName = ""; // TicketClient thread name.
+	Queue<String> customers; // Queue of customers.
 
 	TicketClient(String hostname, String threadname) {
 		tc = new ThreadedTicketClient(this, hostname, threadname);
@@ -83,8 +71,8 @@ public class TicketClient {
 	void requestTicket() {
 		// TODO thread.run()
 		try{
-			tc.run();
-		} catch (SoldOutException e){
+			tc.run(); // Run ThreadedTicketClient operation to find a seat for a given customer.
+		} catch (SoldOutException e){ // If sold out, print appropriate message.
 			System.out.println("The Bates Recital Hall has sold out of tickets. Ticket office now closing.");
 			return;
 		} catch(Exception e){

@@ -17,15 +17,16 @@ public class TheaterShow {
 	
 	public static int theatreCapacity = 0; //total theatreCapacity
 	
-	public static final ArrayList<String> rowArray = new ArrayList<String>();
+	public static final ArrayList<String> rowArray = new ArrayList<String>(); // Make an array with all characters of the alphabet.
 	
-	private Lock changeLock = new ReentrantLock();
+	private Lock changeLock = new ReentrantLock(); // Lock seat resources during access period so no two tickets sold for same seat.
 	
 	
 	public TheaterShow(){
-		initSeats();
+		initSeats(); // Set up theatre configuration according to Bates Recital Hall standards.
 	}
 	
+	/* Create array of all alphabet characters. Will use for setting row letters. */
 	public static void initRows()
 	{
 		char character = 'A';
@@ -36,26 +37,19 @@ public class TheaterShow {
 	}
 	
 	public static void initSeats(){
-		
-		initRows();
-		
-		theatreSeats = new LinkedList<Seat>();
-		
-		
-		
-		
+		initRows(); // Create array of all alpha chars.
+		theatreSeats = new LinkedList<Seat>(); // theatreSeats is a queue of seats.
+		// Order of queue: Row A, middle section -> Row A, left section -> Row A, right section -> Row B, middle section, and so on.
 		
 		for(int j=0; j < 26; j++){
-			
 			for(int k = 108; k < 122; k++){
-				theatreSeats.add(new Seat(Section.Middle_Section, rowArray.get(j), k));
+				theatreSeats.add(new Seat(Section.Middle_Section, rowArray.get(j), k)); // Add Row j middle section seats to queue.
 			}
-			
 			for(int k = 122; k < 129; k++){
-				theatreSeats.add(new Seat(Section.Left_Wing,rowArray.get(j),k));
+				theatreSeats.add(new Seat(Section.House_Left,rowArray.get(j),k)); // Add Row j left wing seats to queue.
 			}
 			for(int k = 101; k < 108; k++){
-				theatreSeats.add(new Seat(Section.Right_Wing,rowArray.get(j),k));
+				theatreSeats.add(new Seat(Section.House_Right,rowArray.get(j),k)); // Add Row j right wing seats to queue.
 			}
 		}
 	}
@@ -87,14 +81,4 @@ public class TheaterShow {
 		
 	}
 
-	/*For Debugging Purposes* 
-	 * Uncomment to test initSeats
-//	 */
-	/*
-	public static void main(String args[]){
-		
-		TestTicketOffice test = new TestTicketOffice();
-		test.basicServerTest();
-	}
-	*/
 }
