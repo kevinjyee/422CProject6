@@ -53,16 +53,7 @@ public class TheaterShow {
 			}
 		}
 	}
-	
-			
-			
-			
 		
-		
-		
-		
-	
-	
 	public Seat bestAvailableSeat(){
 		changeLock.lock(); // Lock this method so no two threads try to poll the same seat. 
 		Seat bestSeat = null;
@@ -71,11 +62,10 @@ public class TheaterShow {
 			if(theatreSeats.isEmpty()){
 				throw new SoldOutException();
 			} else{
-				bestSeat = theatreSeats.poll();
-				//printTicket(bestSeat);
+				bestSeat = theatreSeats.poll(); // Find best available seat.
 			}
 		} finally{
-			changeLock.unlock();
+			changeLock.unlock(); // Unlock method to free up seat selection.
 		}
 		return bestSeat;
 		

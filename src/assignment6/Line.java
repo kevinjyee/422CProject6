@@ -17,6 +17,9 @@ public class Line implements Runnable {
 	
 	
 	public void run(){
+		if(custLine.isEmpty()){
+			System.out.println("Ticket office " + officeName + " has no customers in line.");
+		}
 		while(!custLine.isEmpty()){		// When there are still customers,
 			custName = custLine.poll(); // 		find the next customer in line,
 			client.requestTicket();		//		look for a ticket for said customer.

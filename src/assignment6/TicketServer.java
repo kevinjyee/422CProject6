@@ -58,7 +58,7 @@ public static void stop(int portNumber) {
 		Thread thread = threadMap.get(portNumber); // Threads keyed on portnumber.
 		if(thread == null){return;}
 			thread.interrupt(); // Interrupt selected thread, lest it run wild.
-			System.out.println("System gracefully stopped");
+			// System.out.println("System gracefully stopped");
 		}
 	
 }
