@@ -21,15 +21,15 @@ public class Line implements Runnable {
 		while(!custLine.isEmpty()){
 			custName = custLine.poll();
 			client.requestTicket();
-			try{
+		
 			if(client.result.equals("null")){
 				System.out.println(custName + "  did not get a ticket from office " + name);
 			}
-			System.out.println(custName + " " + client.result + " from " + name);
+			else{
+				System.out.println(custName + " " + client.result + " from " + name);
 			}
-			catch(NullPointerException e){
-				System.out.println("E1");
-			}
+			
+			
 				
 			
 		}

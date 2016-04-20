@@ -84,7 +84,7 @@ public class TicketClient {
 		try{
 			tc.run();
 		} catch (SoldOutException e){
-			System.out.println("The Bates Recital Hall has sold out of tickets. Ticket office " + threadName + " now closing.");
+			System.out.println("The Bates Recital Hall has sold out of tickets. Ticket office now closing.");
 			return;
 		} catch(Exception e){
 			System.out.println("Something went wrong...");

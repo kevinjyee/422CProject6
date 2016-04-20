@@ -18,7 +18,11 @@ import org.junit.Test;
 public class TestTicketOffice {
 
 	public static int score = 0;
-
+/*
+ * Function: basicServerTest()
+ * ----------------------------------
+ * @ Tests a creation of one Server and Client
+ */
 	@Test
 	public void basicServerTest() {
 	try{
@@ -45,6 +49,11 @@ public class TestTicketOffice {
 		TicketServer.stop(16791);
 	}
 
+	/*
+	 * Function: testServerCachedHardInstance()
+	 * -------------------------------------------
+	 * @ Tests a creation of 2 servers noncurrent
+	 */
 	@Test
 	public void testServerCachedHardInstance() {
 		try {
@@ -80,8 +89,15 @@ public class TestTicketOffice {
 		TicketServer.stop(16790);
 	}
 
+	
+	
+	/*
+	 * Function: threeNonConcurrentServerTest()
+	 * ----------------------------------------
+	 * @ Tests the application of three Non Concurrent Servers
+	 */
 	@Test
-	public void twoNonConcurrentServerTest() {
+	public void threeNonConcurrentServerTest() {
 		try {
 			TheaterShow batesRecitalHall = new TheaterShow();
 			TicketServer.start(16791, batesRecitalHall);
@@ -122,8 +138,15 @@ line1.start();
 		TicketServer.stop(16791);
 	}
 	
+	
+	
+	/*
+	 * Function: threeConcurrentServerTest()
+	 * ----------------------------------
+	 * Tests 3 concurrent Servers
+	 */
 	@Test
-	public void twoConcurrentServerTest() {
+	public void threeConcurrentServerTest() {
 		try {
 			TheaterShow batesRecitalHall = new TheaterShow();
 			TicketServer.start(16782, batesRecitalHall);
@@ -153,6 +176,92 @@ line1.start();
 		}
 		TicketServer.stop(16782);
 
+	}
+	
+	/*
+	 * Function: threeConcurrentServersManyCustomers() {
+	 * ----------------------------------
+	 * Tests 3 concurrent Servers with sold out show
+	 */
+	@Test
+	public void threeConcurrentServersManyCustomers() {
+		try {
+			TheaterShow batesRecitalHall = new TheaterShow();
+			TicketServer.start(16782, batesRecitalHall);
+		} catch (Exception e) {
+			fail();
+		}
+		Random rand = new Random();
+		int numCustomers = rand.nextInt(901) + 500;
+		Queue<String> lineOne = new LinkedList<String>();
+		Queue<String> lineTwo = new LinkedList<String>();
+		Queue<String> lineThree = new LinkedList<String>();
+		fillQueues(numCustomers, lineOne, lineTwo, lineThree);
+		Thread t1 = new Thread(new Line("localhost", "c1",lineOne));
+		Thread t2 = new Thread(new Line("localhost", "c2",lineTwo));
+		Thread t3 = new Thread(new Line("localhost", "c3",lineThree));
+		
+		
+		t1.start();
+		t2.start();
+		t3.start();
+		try {
+			t1.join();
+			t2.join();
+			t3.join();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		TicketServer.stop(16782);
+
+	}
+	
+	
+	/*
+	 * Function: threeNonConcurrentServerTestManyCustomers()
+	 * ----------------------------------------
+	 * @ Tests the application of three Non Concurrent Servers
+	 */
+	@Test
+	public void threeNonConcurrentServerManyCustomers() {
+		try {
+			TheaterShow batesRecitalHall = new TheaterShow();
+			TicketServer.start(16795, batesRecitalHall);
+		} catch (Exception e) {
+			fail();
+		}
+		Random rand = new Random();
+		int numCustomers = rand.nextInt(901) + 500;
+		Queue<String> lineOne = new LinkedList<String>();
+		Queue<String> lineTwo = new LinkedList<String>();
+		Queue<String> lineThree = new LinkedList<String>();
+		fillQueues(numCustomers, lineOne, lineTwo, lineThree);
+		Thread line1 = new Thread(new Line("localhost", "nonconc1",lineOne));
+		Thread line2 = new Thread(new Line("localhost", "nonconc2",lineTwo));
+		Thread line3 = new Thread(new Line("localhost","nonconc3",lineThree));
+line1.start();
+		
+		try{
+			line1.join();
+		}
+		catch(Exception e){
+			fail();
+		}
+		line2.start();
+		try{
+			line2.join();
+		}
+		catch(Exception e){
+			fail();
+		}
+		line3.start();
+		try{
+			line3.join();
+		}
+		catch(Exception e){
+			fail();
+		}
+		TicketServer.stop(16795);
 	}
 	
 	public void fillQueues(int numCustomers, Queue<String> line1, Queue<String> line2, Queue<String> line3){
