@@ -10,23 +10,24 @@ public class Line implements Runnable {
 	private Queue<String> custLine;
 	public Line(String hostname, String threadname, Queue<String> Line){
 		
-		custLine = Line;
 		client = new TicketClient(hostname, threadname);
 		name = threadname;
+		custLine = Line;
 	}
 	
 	
 	public void run(){
 		
 		while(!custLine.isEmpty()){
-			custName = custLine.poll();
+			String cust = custLine.poll();
+			custName = cust;
 			client.requestTicket();
 		
 			if(client.result.equals("null")){
 				System.out.println(custName + "  did not get a ticket from office " + name);
 			}
 			else{
-				System.out.println(custName + " " + client.result + " from " + name);
+				System.out.println(cust + " " + client.result + " from " + name);
 			}
 			
 			

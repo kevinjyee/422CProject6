@@ -13,6 +13,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import assignment6.ThreadedTicketClient;
 
@@ -20,6 +22,7 @@ class ThreadedTicketClient implements Runnable {
 	String hostname = "127.0.0.1";
 	String threadname = "X";
 	TicketClient sc;
+	private Lock changeLock = new ReentrantLock();
 
 	public ThreadedTicketClient(TicketClient sc, String hostname, String threadname) {
 		this.sc = sc;
@@ -30,12 +33,10 @@ class ThreadedTicketClient implements Runnable {
 	public void run() {
 		System.out.flush();
 		try {
-			
 			Socket echoSocket = new Socket(hostname, TicketServer.PORT);
 			BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
 			//BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
 			sc.result = in.readLine();
-			
 			echoSocket.close();
 			
 			

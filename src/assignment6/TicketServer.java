@@ -15,12 +15,15 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class TicketServer {
 	static int PORT = 2222;
 	// EE422C: no matter how many concurrent requests you get,
 	// do not have more than three servers running concurrently
 	final static int MAXPARALLELTHREADS = 3;
+	
 	
 	public static TheaterShow theatre = null;
 	private static HashMap<Integer, Thread> threadMap = new HashMap<Integer, Thread>();
@@ -58,7 +61,6 @@ class ThreadedTicketServer implements Runnable {
 	
 	int port;
 	TheaterShow theatre;
-	
 	
 	
 	public ThreadedTicketServer(int port, TheaterShow venue){

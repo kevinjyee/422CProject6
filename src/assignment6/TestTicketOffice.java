@@ -113,7 +113,7 @@ public class TestTicketOffice {
 		Thread line1 = new Thread(new Line("localhost", "nonconc1",lineOne));
 		Thread line2 = new Thread(new Line("localhost", "nonconc2",lineTwo));
 		Thread line3 = new Thread(new Line("localhost","nonconc3",lineThree));
-line1.start();
+		line1.start();
 		
 		try{
 			line1.join();
@@ -159,9 +159,9 @@ line1.start();
 		Queue<String> lineTwo = new LinkedList<String>();
 		Queue<String> lineThree = new LinkedList<String>();
 		fillQueues(numCustomers, lineOne, lineTwo, lineThree);
-		Thread t1 = new Thread(new Line("localhost", "c1",lineOne));
-		Thread t2 = new Thread(new Line("localhost", "c2",lineTwo));
-		Thread t3 = new Thread(new Line("localhost", "c3",lineThree));
+		Thread t1 = new Thread(new Line("localhost", "c1", lineOne));
+		Thread t2 = new Thread(new Line("localhost", "c2", lineTwo));
+		Thread t3 = new Thread(new Line("localhost", "c3", lineThree));
 		
 		
 		t1.start();
@@ -197,9 +197,9 @@ line1.start();
 		Queue<String> lineTwo = new LinkedList<String>();
 		Queue<String> lineThree = new LinkedList<String>();
 		fillQueues(numCustomers, lineOne, lineTwo, lineThree);
-		Thread t1 = new Thread(new Line("localhost", "c1",lineOne));
-		Thread t2 = new Thread(new Line("localhost", "c2",lineTwo));
-		Thread t3 = new Thread(new Line("localhost", "c3",lineThree));
+		Thread t1 = new Thread(new Line("localhost", "c1", lineOne));
+		Thread t2 = new Thread(new Line("localhost", "c2", lineTwo));
+		Thread t3 = new Thread(new Line("localhost", "c3", lineThree));
 		
 		
 		t1.start();
@@ -239,7 +239,7 @@ line1.start();
 		Thread line1 = new Thread(new Line("localhost", "nonconc1",lineOne));
 		Thread line2 = new Thread(new Line("localhost", "nonconc2",lineTwo));
 		Thread line3 = new Thread(new Line("localhost","nonconc3",lineThree));
-line1.start();
+		line1.start();
 		
 		try{
 			line1.join();
@@ -266,6 +266,19 @@ line1.start();
 	
 	public void fillQueues(int numCustomers, Queue<String> line1, Queue<String> line2, Queue<String> line3){
 		for(int i = 0; i < numCustomers; i++){
+			String customer = "customer" + Integer.toString(i);
+			if((i % 3) == 0){
+				line1.add(customer);
+			} else if((i % 3) == 1){
+				line2.add(customer);
+			} else if((i % 3) == 2){
+				line3.add(customer);
+			}
+		}
+	}
+	
+	public void fillQueuesTest(int numCustomers, Queue<String> line1, Queue<String> line2, Queue<String> line3){
+		for(int i = 0; i < 12; i++){
 			String customer = "customer" + Integer.toString(i);
 			if((i % 3) == 0){
 				line1.add(customer);
